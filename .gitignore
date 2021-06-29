@@ -1,0 +1,9 @@
+target
+out
+venv
+.idea/
+.DS_Store
+*.iml
+__pycache__
+config.py
+key.json
