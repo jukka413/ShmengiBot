@@ -67,26 +67,35 @@ async def cheque_input(message):
     file_url = f'https://api.telegram.org/file/bot{TOKEN}/{path}'
     js = requests.get(file_url)
     cheque = js.text
-    info = json.loads(cheque)
+    info = json.loads(cheque)[0]
+    # print(type(info))
+    # print(info)
+
+    info = info["ticket"]["document"]["receipt"]
     try:
         shop = info["user"]
     except KeyError:
         shop = "Unknown shop"
     items = info["items"]
+    date = info["dateTime"]
+    date = date[:date.find('T')]
+    date = date[8:] + '.' + date[5:7] + '.' + date[:4]
+    #print(date)
     print(items)
     for i in range(len(items)):
         name = items[i]["name"]
         price = items[i]["price"]/100
         quantity = items[i]["quantity"]
         summ = items[i]["sum"]/100
-        write_gs(name, quantity, price, summ, shop)
+        write_gs(date, name, quantity, price, summ, shop)
     await bot.send_message(message.chat.id, 'Запись произведена')
 
 
-def write_gs(name, count, price, summ, shop_name):
+def write_gs(date, name, count, price, summ, shop_name):
     service = connect_sheet()
 
-    date = datetime.date.today().strftime("%d.%m.%Y")
+    # date = datetime.date.today().strftime("%d.%m.%Y")
+    date = date
     range = SHEET_NAME + "!A:F"
     list = [[date, name, count, price, summ, shop_name]]
     resource = {
