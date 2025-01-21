@@ -48,7 +48,7 @@ async def text_input(message):
         name = text[:text.find(',')].strip()
         summ = text[text.find(',') + 1:].strip()
         empty = ""
-        write_gs(name, empty, empty, summ, empty)
+        write_gs(name, empty, empty, summ, empty, empty)
         await bot.send_message(message.chat.id, 'Запись произведена')
     else:
         await bot.send_message(message.chat.id, 'Введено название месяца')
